@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.mapper.AdminBookMapper" >
+  <resultMap id="BaseResultMap" type="com.book.entity.Book" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="publishTime" property="publishTime" jdbcType="VARCHAR" />
+    <result column="category" property="category" jdbcType="INTEGER" />
+    <result column="biggestCate" property="biggestCate" jdbcType="VARCHAR" />
+    <result column="biggerCate" property="biggerCate" jdbcType="VARCHAR" />
+    <result column="bigCate" property="bigCate" jdbcType="VARCHAR" />
+    <result column="describe" property="describe" jdbcType="VARCHAR" />
+    <result column="author" property="author" jdbcType="VARCHAR" />
+    <result column="publisher" property="publisher" jdbcType="VARCHAR" />
+    <result column="star" property="star" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="VARCHAR" />
+    <result column="prePrice" property="prePrice" jdbcType="VARCHAR" />
+    <result column="discount" property="discount" jdbcType="VARCHAR" />
+    <result column="stock" property="stock" jdbcType="INTEGER" />
+    <result column="sales" property="sales" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="INTEGER" />
+    <result column="image1" property="image1" jdbcType="VARCHAR" />
+    <result column="image2" property="image2" jdbcType="VARCHAR" />
+    <result column="image3" property="image3" jdbcType="VARCHAR" />
+    <result column="image4" property="image4" jdbcType="VARCHAR" />
+    <result column="image5" property="image5" jdbcType="VARCHAR" />
+    <result column="paper" property="paper" jdbcType="VARCHAR" />
+    <result column="packing" property="packing" jdbcType="VARCHAR" />
+    <result column="suit" property="suit" jdbcType="VARCHAR" />
+    <result column="ISBN" property="ISBN" jdbcType="VARCHAR" />
+    <result column="groundingTime" property="groundingTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.book.entity.Book" extends="BaseResultMap" >
+    <result column="detail" property="detail" jdbcType="LONGVARCHAR" />
+    <result column="contentSummary" property="contentSummary" jdbcType="LONGVARCHAR" />
+    <result column="authorSummary" property="authorSummary" jdbcType="LONGVARCHAR" />
+    <result column="catalog" property="catalog" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, `name`, publishTime, category, biggestCate, biggerCate, bigCate, `describe`, author,
+    publisher, star, price, prePrice, discount, stock, sales, remark, image1, image2, 
+    image3, image4, image5, paper, packing, suit, ISBN, groundingTime
+  </sql>
+  <sql id="Blob_Column_List" >
+    detail, contentSummary, authorSummary, `catalog`
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from book
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from book
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.book.entity.Book" >
+    insert into book (id, `name`, publishTime,
+      category, biggestCate, biggerCate, 
+      bigCate, `describe`, author,
+      publisher, star, price, 
+      prePrice, discount, stock, 
+      sales, remark, image1, 
+      image2, image3, image4, 
+      image5, paper, packing, 
+      suit, ISBN, groundingTime, 
+      detail, contentSummary, authorSummary, 
+      `catalog`)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{publishTime,jdbcType=VARCHAR}, 
+      #{category,jdbcType=INTEGER}, #{biggestCate,jdbcType=VARCHAR}, #{biggerCate,jdbcType=VARCHAR}, 
+      #{bigCate,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, 
+      #{publisher,jdbcType=VARCHAR}, #{star,jdbcType=VARCHAR}, #{price,jdbcType=VARCHAR}, 
+      #{prePrice,jdbcType=VARCHAR}, #{discount,jdbcType=VARCHAR}, #{stock,jdbcType=INTEGER}, 
+      #{sales,jdbcType=INTEGER}, #{remark,jdbcType=INTEGER}, #{image1,jdbcType=VARCHAR}, 
+      #{image2,jdbcType=VARCHAR}, #{image3,jdbcType=VARCHAR}, #{image4,jdbcType=VARCHAR}, 
+      #{image5,jdbcType=VARCHAR}, #{paper,jdbcType=VARCHAR}, #{packing,jdbcType=VARCHAR}, 
+      #{suit,jdbcType=VARCHAR}, #{ISBN,jdbcType=VARCHAR}, #{groundingTime,jdbcType=TIMESTAMP}, 
+      #{detail,jdbcType=LONGVARCHAR}, #{contentSummary,jdbcType=LONGVARCHAR}, #{authorSummary,jdbcType=LONGVARCHAR}, 
+      #{catalog,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.book.entity.Book" >
+    insert into book
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        `name`,
+      </if>
+      <if test="publishTime != null" >
+        publishTime,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="biggestCate != null" >
+        biggestCate,
+      </if>
+      <if test="biggerCate != null" >
+        biggerCate,
+      </if>
+      <if test="bigCate != null" >
+        bigCate,
+      </if>
+      <if test="describe != null" >
+        `describe`,
+      </if>
+      <if test="author != null" >
+        author,
+      </if>
+      <if test="publisher != null" >
+        publisher,
+      </if>
+      <if test="star != null" >
+        star,
+      </if>
+      <if test="price != null" >
+        price,
+      </if>
+      <if test="prePrice != null" >
+        prePrice,
+      </if>
+      <if test="discount != null" >
+        discount,
+      </if>
+      <if test="stock != null" >
+        stock,
+      </if>
+      <if test="sales != null" >
+        sales,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="image1 != null" >
+        image1,
+      </if>
+      <if test="image2 != null" >
+        image2,
+      </if>
+      <if test="image3 != null" >
+        image3,
+      </if>
+      <if test="image4 != null" >
+        image4,
+      </if>
+      <if test="image5 != null" >
+        image5,
+      </if>
+      <if test="paper != null" >
+        paper,
+      </if>
+      <if test="packing != null" >
+        packing,
+      </if>
+      <if test="suit != null" >
+        suit,
+      </if>
+      <if test="ISBN != null" >
+        ISBN,
+      </if>
+      <if test="groundingTime != null" >
+        groundingTime,
+      </if>
+      <if test="detail != null" >
+        detail,
+      </if>
+      <if test="contentSummary != null" >
+        contentSummary,
+      </if>
+      <if test="authorSummary != null" >
+        authorSummary,
+      </if>
+      <if test="catalog != null" >
+        `catalog`,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        #{publishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        #{category,jdbcType=INTEGER},
+      </if>
+      <if test="biggestCate != null" >
+        #{biggestCate,jdbcType=VARCHAR},
+      </if>
+      <if test="biggerCate != null" >
+        #{biggerCate,jdbcType=VARCHAR},
+      </if>
+      <if test="bigCate != null" >
+        #{bigCate,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        #{star,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="prePrice != null" >
+        #{prePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null" >
+        #{discount,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="sales != null" >
+        #{sales,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=INTEGER},
+      </if>
+      <if test="image1 != null" >
+        #{image1,jdbcType=VARCHAR},
+      </if>
+      <if test="image2 != null" >
+        #{image2,jdbcType=VARCHAR},
+      </if>
+      <if test="image3 != null" >
+        #{image3,jdbcType=VARCHAR},
+      </if>
+      <if test="image4 != null" >
+        #{image4,jdbcType=VARCHAR},
+      </if>
+      <if test="image5 != null" >
+        #{image5,jdbcType=VARCHAR},
+      </if>
+      <if test="paper != null" >
+        #{paper,jdbcType=VARCHAR},
+      </if>
+      <if test="packing != null" >
+        #{packing,jdbcType=VARCHAR},
+      </if>
+      <if test="suit != null" >
+        #{suit,jdbcType=VARCHAR},
+      </if>
+      <if test="ISBN != null" >
+        #{ISBN,jdbcType=VARCHAR},
+      </if>
+      <if test="groundingTime != null" >
+        #{groundingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="detail != null" >
+        #{detail,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="contentSummary != null" >
+        #{contentSummary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="authorSummary != null" >
+        #{authorSummary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="catalog != null" >
+        #{catalog,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.book.entity.Book" >
+    update book
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="publishTime != null" >
+        publishTime = #{publishTime,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null" >
+        category = #{category,jdbcType=INTEGER},
+      </if>
+      <if test="biggestCate != null" >
+        biggestCate = #{biggestCate,jdbcType=VARCHAR},
+      </if>
+      <if test="biggerCate != null" >
+        biggerCate = #{biggerCate,jdbcType=VARCHAR},
+      </if>
+      <if test="bigCate != null" >
+        bigCate = #{bigCate,jdbcType=VARCHAR},
+      </if>
+      <if test="describe != null" >
+        `describe` = #{describe,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null" >
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="publisher != null" >
+        publisher = #{publisher,jdbcType=VARCHAR},
+      </if>
+      <if test="star != null" >
+        star = #{star,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null" >
+        price = #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="prePrice != null" >
+        prePrice = #{prePrice,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null" >
+        discount = #{discount,jdbcType=VARCHAR},
+      </if>
+      <if test="stock != null" >
+        stock = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="sales != null" >
+        sales = #{sales,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=INTEGER},
+      </if>
+      <if test="image1 != null" >
+        image1 = #{image1,jdbcType=VARCHAR},
+      </if>
+      <if test="image2 != null" >
+        image2 = #{image2,jdbcType=VARCHAR},
+      </if>
+      <if test="image3 != null" >
+        image3 = #{image3,jdbcType=VARCHAR},
+      </if>
+      <if test="image4 != null" >
+        image4 = #{image4,jdbcType=VARCHAR},
+      </if>
+      <if test="image5 != null" >
+        image5 = #{image5,jdbcType=VARCHAR},
+      </if>
+      <if test="paper != null" >
+        paper = #{paper,jdbcType=VARCHAR},
+      </if>
+      <if test="packing != null" >
+        packing = #{packing,jdbcType=VARCHAR},
+      </if>
+      <if test="suit != null" >
+        suit = #{suit,jdbcType=VARCHAR},
+      </if>
+      <if test="ISBN != null" >
+        ISBN = #{ISBN,jdbcType=VARCHAR},
+      </if>
+      <if test="groundingTime != null" >
+        groundingTime = #{groundingTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="detail != null" >
+        detail = #{detail,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="contentSummary != null" >
+        contentSummary = #{contentSummary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="authorSummary != null" >
+        authorSummary = #{authorSummary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="catalog != null" >
+        `catalog` = #{catalog,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.book.entity.Book" >
+    update book
+    set name = #{name,jdbcType=VARCHAR},
+      publishTime = #{publishTime,jdbcType=VARCHAR},
+      category = #{category,jdbcType=INTEGER},
+      biggestCate = #{biggestCate,jdbcType=VARCHAR},
+      biggerCate = #{biggerCate,jdbcType=VARCHAR},
+      bigCate = #{bigCate,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      star = #{star,jdbcType=VARCHAR},
+      price = #{price,jdbcType=VARCHAR},
+      prePrice = #{prePrice,jdbcType=VARCHAR},
+      discount = #{discount,jdbcType=VARCHAR},
+      stock = #{stock,jdbcType=INTEGER},
+      sales = #{sales,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=INTEGER},
+      image1 = #{image1,jdbcType=VARCHAR},
+      image2 = #{image2,jdbcType=VARCHAR},
+      image3 = #{image3,jdbcType=VARCHAR},
+      image4 = #{image4,jdbcType=VARCHAR},
+      image5 = #{image5,jdbcType=VARCHAR},
+      paper = #{paper,jdbcType=VARCHAR},
+      packing = #{packing,jdbcType=VARCHAR},
+      suit = #{suit,jdbcType=VARCHAR},
+      ISBN = #{ISBN,jdbcType=VARCHAR},
+      groundingTime = #{groundingTime,jdbcType=TIMESTAMP},
+      detail = #{detail,jdbcType=LONGVARCHAR},
+      contentSummary = #{contentSummary,jdbcType=LONGVARCHAR},
+      authorSummary = #{authorSummary,jdbcType=LONGVARCHAR},
+      `catalog` = #{catalog,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.book.entity.Book" >
+    update book
+    set name = #{name,jdbcType=VARCHAR},
+      publishTime = #{publishTime,jdbcType=VARCHAR},
+      category = #{category,jdbcType=INTEGER},
+      biggestCate = #{biggestCate,jdbcType=VARCHAR},
+      biggerCate = #{biggerCate,jdbcType=VARCHAR},
+      bigCate = #{bigCate,jdbcType=VARCHAR},
+      `describe` = #{describe,jdbcType=VARCHAR},
+      author = #{author,jdbcType=VARCHAR},
+      publisher = #{publisher,jdbcType=VARCHAR},
+      star = #{star,jdbcType=VARCHAR},
+      price = #{price,jdbcType=VARCHAR},
+      prePrice = #{prePrice,jdbcType=VARCHAR},
+      discount = #{discount,jdbcType=VARCHAR},
+      stock = #{stock,jdbcType=INTEGER},
+      sales = #{sales,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=INTEGER},
+      image1 = #{image1,jdbcType=VARCHAR},
+      image2 = #{image2,jdbcType=VARCHAR},
+      image3 = #{image3,jdbcType=VARCHAR},
+      image4 = #{image4,jdbcType=VARCHAR},
+      image5 = #{image5,jdbcType=VARCHAR},
+      paper = #{paper,jdbcType=VARCHAR},
+      packing = #{packing,jdbcType=VARCHAR},
+      suit = #{suit,jdbcType=VARCHAR},
+      ISBN = #{ISBN,jdbcType=VARCHAR},
+      groundingTime = #{groundingTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

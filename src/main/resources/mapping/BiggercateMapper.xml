@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.mapper.BiggercateMapper" >
+  <resultMap id="BaseResultMap" type="com.book.entity.Biggercate" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="cateName" property="cateName" jdbcType="VARCHAR" />
+    <result column="biggestCate_id" property="biggestCate_id" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, cateName, biggestCate_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from biggercate
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from biggercate
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.book.entity.Biggercate" >
+    insert into biggercate (id, cateName, biggestCate_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{cateName,jdbcType=VARCHAR}, #{biggestCate_id,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.book.entity.Biggercate" >
+    insert into biggercate
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="cateName != null" >
+        cateName,
+      </if>
+      <if test="biggestCate_id != null" >
+        biggestCate_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="cateName != null" >
+        #{cateName,jdbcType=VARCHAR},
+      </if>
+      <if test="biggestCate_id != null" >
+        #{biggestCate_id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.book.entity.Biggercate" >
+    update biggercate
+    <set >
+      <if test="cateName != null" >
+        cateName = #{cateName,jdbcType=VARCHAR},
+      </if>
+      <if test="biggestCate_id != null" >
+        biggestCate_id = #{biggestCate_id,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.book.entity.Biggercate" >
+    update biggercate
+    set cateName = #{cateName,jdbcType=VARCHAR},
+      biggestCate_id = #{biggestCate_id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getAllByBiggestCateId" resultType="com.book.entity.Biggercate">
+    select * from biggerCate where biggestCate_id=#{biggestCate_id}
+  </select>
+</mapper>

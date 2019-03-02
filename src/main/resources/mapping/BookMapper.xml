@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.book.mapper.BookMapper">
+    <sql id="Base_List">
+    id, `name`, publishTime, category, biggestCate, biggerCate, bigCate, `describe`, author,
+    publisher, star, price, prePrice, discount, stock, sales, remark, image1, image2,
+    image3, image4, image5, paper, packing, suit, ISBN, detail, contentSummary, authorSummary, `catalog`, groundingTime
+  </sql>
+    <select id="getBookById" resultType="com.book.entity.Book">
+        select
+        <include refid="Base_List"/>
+        from book where id=#{id,jdbcType=INTEGER};
+    </select>
+
+    <select id="getCount" resultType="Integer">
+    select count(1) from book;
+  </select>
+
+    <select id="getTenNewBook" resultType="com.book.DTO.NewBookSaleDto">
+    select id,`name`,author,price,prePrice,image1 from book order by groundingTime desc limit 10;
+  </select>
+
+    <select id="getDiscountBook" parameterType="java.lang.Integer" resultType="com.book.entity.Book">
+        select
+        <include refid="Base_List"/>
+        from discount_book
+        where
+        category=#{type}
+        order by groundingTime desc limit 10;
+    </select>
+
+    <select id="getDiscountBookAll" resultType="com.book.entity.Book">
+        select
+        <include refid="Base_List"/>
+        from discount_book
+        order by groundingTime desc limit 10;
+    </select>
+
+    <select id="getSaleRankBook" parameterType="java.lang.Integer" resultType="com.book.entity.Book">
+        select
+        <include refid="Base_List"/>
+        from book
+        where
+        category=#{type}
+        order by sales desc limit 10;
+    </select>
+
+    <select id="getSaleRankBookAll" resultType="com.book.entity.Book">
+        select
+        <include refid="Base_List"/>
+        from book
+        order by sales desc limit 10;
+    </select>
+
+    <select id="getSameCateBook" parameterType="Map" resultType="com.book.DTO.SameCateBookDto">
+        select id,name,author,price,image1 from book where biggerCate=#{biggerCate} and id>=(SELECT floor(RAND() * (SELECT MAX(id) FROM book))) and id!=#{id} order by id limit 5;
+    </select>
+
+    <!--找到某具体分类下的子分类-->
+    <select id="getSubCateByC1" resultType="String" parameterType="com.book.VO.SearchByCateVO">
+        select biggerCate from book
+        <where>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+            <if test="bigCate != null">
+                and bigCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="slowPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) >= #{slowPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) < #{highPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowAppraise != null">
+                and <![CDATA[CONVERT(star,SIGNED) >= #{slowAppraise,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) >= #{slowDiscount,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) <= #{highDiscount,jdbcType=INTEGER}]]>
+            </if>
+        </where>
+        group by biggerCate;
+    </select>
+
+    <select id="getSubCateByC2" resultType="String" parameterType="com.book.VO.SearchByCateVO">
+        select bigCate from book
+        <where>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+            <if test="bigCate != null">
+                and bigCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="slowPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) >= #{slowPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) < #{highPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowAppraise != null">
+                and <![CDATA[CONVERT(star,SIGNED) >= #{slowAppraise,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) >= #{slowDiscount,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) <= #{highDiscount,jdbcType=INTEGER}]]>
+            </if>
+        </where>
+        group by bigCate;
+    </select>
+
+    <!--找到某具体分类下的所有书籍的出版社-->
+    <select id="getPublishers" resultType="String" parameterType="com.book.VO.SearchByCateVO">
+        select publisher from book
+        <where>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+            <if test="bigCate != null">
+                and bigCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="slowPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) >= #{slowPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) < #{highPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowAppraise != null">
+                and <![CDATA[CONVERT(star,SIGNED) >= #{slowAppraise,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) >= #{slowDiscount,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) <= #{highDiscount,jdbcType=INTEGER}]]>
+            </if>
+        </where>
+        group by publisher order by count(*) desc limit 40;
+    </select>
+
+    <!--找到某具体分类下的所有书籍的作者-->
+    <select id="getAuthors" resultType="String" parameterType="com.book.VO.SearchByCateVO">
+        select author from book
+        <where>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+            <if test="bigCate != null">
+                and bigCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="slowPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) >= #{slowPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) < #{highPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowAppraise != null">
+                and <![CDATA[CONVERT(star,SIGNED) >= #{slowAppraise,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) >= #{slowDiscount,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) <= #{highDiscount,jdbcType=INTEGER}]]>
+            </if>
+        </where>
+        group by author order by count(*) desc limit 60;
+    </select>
+
+    <select id="searchByParam" parameterType="com.book.VO.SearchByCateVO" resultType="com.book.DTO.SearchByCateBookDto">
+        select id,`name`,detail,price,discount,prePrice,star,remark,image1 from book
+        <where>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+            <if test="bigCate != null">
+                and bigCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="slowPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) >= #{slowPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) < #{highPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowAppraise != null">
+                and <![CDATA[CONVERT(star,SIGNED) >= #{slowAppraise,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) >= #{slowDiscount,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) <= #{highDiscount,jdbcType=INTEGER}]]>
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER},15;
+    </select>
+
+    <select id="getCountByParam" parameterType="com.book.VO.SearchByCateVO" resultType="Integer">
+        select count(1) from book
+        <where>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+            <if test="bigCate != null">
+                and bigCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+            <if test="slowPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) >= #{slowPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highPrice != null">
+                and <![CDATA[CONVERT(price,SIGNED) < #{highPrice,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowAppraise != null">
+                and <![CDATA[CONVERT(star,SIGNED) >= #{slowAppraise,jdbcType=INTEGER}]]>
+            </if>
+            <if test="slowDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) >= #{slowDiscount,jdbcType=INTEGER}]]>
+            </if>
+            <if test="highDiscount != null">
+                and <![CDATA[CONVERT(discount,SIGNED) <= #{highDiscount,jdbcType=INTEGER}]]>
+            </if>
+        </where>
+    </select>
+
+    <!--————————————————————————————————————分割线————————————————————————————————————-->
+    <select id="getIdsByQueryString" parameterType="Map" resultType="Integer">
+      select id from search_info
+      where allInfoText like CONCAT('%',#{queryString,jdbcType=VARCHAR},'%')
+      limit #{page},#{limit}
+    </select>
+
+    <select id="getBooksByQueryString" parameterType="com.book.VO.SearchVO"
+            resultType="com.book.DTO.SearchByCateBookDto">
+        select id,`name`,detail,price,discount,prePrice,star,remark,image1 from book
+        <where>
+            <if test="1 == 1">
+                and id in (select id from search_info where allInfoText like
+                CONCAT('%',#{queryString,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="bigCate != null">
+                and biggerCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        limit #{page,jdbcType=INTEGER},15;
+    </select>
+
+    <select id="getCatesByQueryString" resultType="String" parameterType="com.book.VO.SearchVO">
+        select biggerCate from book
+        <where>
+            <if test="1 == 1">
+                and id in (select id from search_info where allInfoText like
+                CONCAT('%',#{queryString,jdbcType=VARCHAR},'%'))
+            </if>
+        </where>
+        group by biggerCate;
+    </select>
+
+    <select id="getPublishersByQueryString" resultType="String" parameterType="com.book.VO.SearchVO">
+        select publisher from book
+        <where>
+            <if test="1 == 1">
+                and id in (select id from search_info where allInfoText like
+                CONCAT('%',#{queryString,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="bigCate != null">
+                and biggerCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        group by publisher order by count(*) desc limit 40;
+    </select>
+
+    <select id="getAuthorsByQueryString" resultType="String" parameterType="com.book.VO.SearchVO">
+        select author from book
+        <where>
+            <if test="1 == 1">
+                and id in (select id from search_info where allInfoText like
+                CONCAT('%',#{queryString,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="bigCate != null">
+                and biggerCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+        group by author order by count(*) desc limit 60;
+    </select>
+
+    <select id="getCountByQueryString" parameterType="com.book.VO.SearchVO" resultType="Integer">
+        select count(1) from book
+        <where>
+            <if test="1 == 1">
+                and id in (select id from search_info where allInfoText like
+                CONCAT('%',#{queryString,jdbcType=VARCHAR},'%'))
+            </if>
+            <if test="bigCate != null">
+                and biggerCate=#{bigCate,jdbcType=VARCHAR}
+            </if>
+            <if test="publisher != null">
+                and publisher=#{publisher,jdbcType=VARCHAR}
+            </if>
+            <if test="author != null">
+                and author like CONCAT('%',#{author,jdbcType=VARCHAR},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--排行榜-->
+    <select id="getRankBooks" parameterType="com.book.VO.RankVO" resultType="com.book.DTO.RankBookDto">
+      select id,`name`,image1,star,remark,author,publishTime,publisher,price,prePrice,discount,sales,@rownum:=@rownum+1 AS rankNo
+      from (SELECT @rownum := 0) r,book
+        <where>
+            <if test="category != null and category != 0">
+                and category=#{category}
+            </if>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+        </where>
+        order by sales desc limit #{page,jdbcType=INTEGER},10;
+    </select>
+
+    <select id="getAllBooks" resultType="com.book.entity.Book" parameterType="java.util.Map">
+        select * from book
+        <where>
+            <if test="category != null and category != 0">
+                and category=#{category}
+            </if>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+        </where>
+        limit #{page},#{limit}
+    </select>
+
+    <select id="getCountByCategoryId" resultType="Integer">
+        select count(1) from book
+        <where>
+            <if test="category != null and category != 0">
+                and category=#{category}
+            </if>
+            <if test="biggestCate != null">
+                and biggestCate=#{biggestCate,jdbcType=VARCHAR}
+            </if>
+            <if test="biggerCate != null">
+                and biggerCate=#{biggerCate,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
+</mapper>
