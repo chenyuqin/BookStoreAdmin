@@ -3,10 +3,7 @@ package com.book.controller;
 import com.book.DTO.AdminAllBookDto;
 import com.book.DTO.AdminEditBookDto;
 import com.book.VO.SearchVO;
-import com.book.entity.Biggercate;
-import com.book.entity.Biggestcate;
-import com.book.entity.Book;
-import com.book.entity.DiscountBookWithBLOBs;
+import com.book.entity.*;
 import com.book.mapper.*;
 import com.book.service.AdminAllBooksService;
 import com.book.service.BookDetailService;
@@ -51,6 +48,12 @@ public class BookController {
     @Autowired
     SearchInfoMapper searchInfoMapper;
 
+    @Autowired
+    CartMapper cartMapper;
+
+    @Autowired
+    RemarkMapper remarkMapper;
+
     @RequestMapping(value = "getAllBooks", method = RequestMethod.POST)
     @ResponseBody
 
@@ -90,7 +93,7 @@ public class BookController {
     @RequestMapping(value = "getAllBooksBySearch", method = RequestMethod.POST)
     @ResponseBody
     public Object getAllBooksBySearch(@RequestParam("page") Integer page, @RequestParam("limit") Integer limit, @RequestParam("queryString") String queryString) {
-        List<Integer> ids = searchService.getIdsByQueryString(queryString, page, limit);
+        List<Integer> ids = searchService.getIdsByQueryString(queryString, (page-1)*limit, limit);
         SearchVO searchVO = new SearchVO();
         searchVO.setQueryString(queryString);
         AdminAllBookDto adminAllBookDto = new AdminAllBookDto();
@@ -140,10 +143,24 @@ public class BookController {
         if (Double.parseDouble(oldBook.getDiscount()) < Double.parseDouble(book.getDiscount())) {
             discountBookMapper.deleteByPrimaryKey(id);
             adminBookMapper.updateByPrimaryKeySelective(book);
+            book = bookDetailService.getBookById(id);
+            String bookJson = JSONObject.fromObject(book).toString();
+            SearchInfo searchInfo = new SearchInfo();
+            searchInfo.setId(book.getId());
+            searchInfo.setAllInfoText(bookJson);
+            searchInfoMapper.updateByPrimaryKeyWithBLOBs(searchInfo);
         } else if (Double.parseDouble(oldBook.getDiscount()) > Double.parseDouble(book.getDiscount())) {
             discountBookMapper.deleteByPrimaryKey(id);
             adminBookMapper.updateByPrimaryKeySelective(book);
             book = bookDetailService.getBookById(id);
+            //更新搜索时的相关信息
+            String bookJson = JSONObject.fromObject(book).toString();
+            SearchInfo searchInfo = new SearchInfo();
+            searchInfo.setId(book.getId());
+            searchInfo.setAllInfoText(bookJson);
+            searchInfoMapper.updateByPrimaryKeyWithBLOBs(searchInfo);
+
+            //处理打折图书的逻辑
             DiscountBookWithBLOBs discountBookWithBLOBs = new DiscountBookWithBLOBs();
             BeanUtils.copyProperties(book, discountBookWithBLOBs);
             discountBookWithBLOBs.setStock(oldBook.getStock() + "");
@@ -161,6 +178,8 @@ public class BookController {
         adminBookMapper.deleteByPrimaryKey(id);
         discountBookMapper.deleteByPrimaryKey(id);
         searchInfoMapper.deleteByPrimaryKey(id);
+        cartMapper.deleteByBookId(id);
+        remarkMapper.deleteByBookId(id);
     }
 
     @RequestMapping(value = "insertBook", method = RequestMethod.POST)

@@ -20,4 +20,6 @@ public interface SlideshowMapper {
     int updateByPrimaryKey(Slideshow record);
 
     List<Slideshow> selectNewFive();
+
+
 }
