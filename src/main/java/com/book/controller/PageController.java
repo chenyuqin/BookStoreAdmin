@@ -11,4 +11,9 @@ public class PageController {
     public String getPage(@PathVariable("page")String page) {
         return page;
     }
+
+    @GetMapping("/")
+    public String index(@PathVariable("page")String page) {
+        return "index";
+    }
 }

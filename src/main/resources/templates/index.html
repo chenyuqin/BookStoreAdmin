@@ -25,7 +25,7 @@
     </div>
     <ul class="layui-nav right" lay-filter="">
         <li class="layui-nav-item">
-            <a href="javascript:;">Admin</a>
+            <a href="javascript:;">admin</a>
             <dl class="layui-nav-child">
                 <dd>
                     <a class="loginout" href="login.html">注销</a>
@@ -75,7 +75,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a _href="del.html">
+                        <a _href="all_orders.html">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>全部订单</cite>
 
@@ -90,19 +90,19 @@
 
                         <ul class="sub-menu">
                             <li>
-                                <a _href="addInput.html">
+                                <a _href="notPay_orders.html">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>未支付订单</cite>
                                 </a>
                             </li>
                             <li>
-                                <a _href="404.html">
+                                <a _href="send_orders.html">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>待发货订单</cite>
                                 </a>
                             </li>
                             <li>
-                                <a _href="404.html">
+                                <a _href="rece_orders.html">
                                     <i class="iconfont">&#xe6a7;</i>
                                     <cite>待收货订单</cite>
                                 </a>
@@ -110,7 +110,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a _href="del.html">
+                        <a _href="done_orders.html">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>已处理订单</cite>
 
@@ -159,18 +159,16 @@
     layui.use(['jquery', 'admin'], function () {
         var $ = layui.jquery;
         $(function () {
-            // var login = JSON.parse(localStorage.getItem("login"));
-            // if(login){
-            // 	if(login=0){
-            // 		window.location.href='login.html';
-            // 		return false;
-            // 	}else{
-            // 		return false;
-            // 	}
-            // }else{
-            // 	window.location.href='login.html';
-            // 	return false;
-            // }
+            $(".loginout").click(function() {
+              $.ajax({
+                  url: "login/logout",
+                  data: {},
+                  type: "post",
+                  dataType: "JSON",
+                  success: function (result) {
+                  }
+              });
+            })
         });
     });
 

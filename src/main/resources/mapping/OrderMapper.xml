@@ -156,14 +156,22 @@
     select status,createTime,address_id,order_id,pay_way,totalPrice
     from `order` o
     <where>
-      <if test="1 == 1">
-        and o.user_id=#{userId,jdbcType=INTEGER}
-      </if>
       <if test="status != null">
         and o.status=#{status,jdbcType=INTEGER}
       </if>
     </where>
-    order by createTime desc;
+    order by createTime desc
+    limit #{page},#{limit}
+  </select>
+
+  <select id="getOrderCountByStatus" resultType="Integer">
+    select count(1)
+    from `order` o
+    <where>
+      <if test="status != null">
+        and o.status=#{status,jdbcType=INTEGER}
+      </if>
+    </where>
   </select>
 
   <select id="getOrderBookByOrderId" resultType="com.book.DTO.OrderBookDto">
@@ -184,4 +192,8 @@
     from `order` o join orderdetail r
     on o.order_id=r.order_id and o.user_id=#{userId,jdbcType=INTEGER} and o.status=4 and r.is_remark=0;
   </select>
+
+  <update id="updateStatusTo3" parameterType="String">
+    update `order` set status=3 where order_id=#{order_id}
+  </update>
 </mapper>

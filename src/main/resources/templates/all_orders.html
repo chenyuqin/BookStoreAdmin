@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>全部订单</title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+		<link rel="stylesheet" href="../static/css/font.css">
+		<link rel="stylesheet" href="../static/css/weadmin.css">
+		<style type="text/css">
+			.layui-form-switch {
+				width: 55px;
+			}			
+			.layui-form-switch em {
+				width: 40px;
+			}			
+			.layui-form-onswitch i {
+				left: 45px;
+			}
+			body {
+			    overflow-y: scroll;
+			}
+			.layui-btn+.layui-btn {
+                margin-left: 0;
+            }
+            .layui-table-cell {
+                padding:0 15px;
+                position:relative;
+                overflow:hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                height: auto;
+                white-space: unset;
+            }
+		</style>
+	</head>
+
+	<body>
+		<div class="weadmin-nav">
+			<span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">订单管理</a>
+        <a>
+          <cite>全部订单</cite></a>
+      </span>
+			<a class="layui-btn layui-btn-sm" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+				<i class="layui-icon" style="line-height:30px">&#x1002;</i></a>
+		</div>
+		<div class="weadmin-body">
+			<div class="weadmin-block demoTable" style="height: 40px;font-size: 16px;
+				font-family: 宋体;font-weight: 600;">
+				<span class="fl" style="line-height:40px;margin-left: 10px;">全部订单列表</span>
+				<span id="resultCount" class="fr" style="line-height:40px;margin-right: 10px;"></span>
+			</div>
+			<table class="layui-hide" id="articleList" lay-filter="demo"></table>
+
+			<script type="text/html" id="operateTpl">
+                <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail" style="color: #000;">详情</a>
+                <br />
+                {{# if (d.status=== 1) { }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs" style="color: goldenrod;">等待支付</a>
+                {{# } else if(d.status=== 2) { }}
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="toSend">去发货</a>
+                {{# } else if(d.status=== 3) { }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs" style="color: blue;">等待收货</a>
+                {{# } else if(d.status=== 4) { }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs" style="color: darkgray;">交易完成</a>
+                {{# } }}
+            </script>
+
+            <script type="text/html" id="reviewTpl">
+                {{d.address.province}} {{d.address.city}} {{d.address.country}} {{d.address.address}}
+            </script>
+
+            <script type="text/html" id="pay_way_tpl">
+                {{# if (d.pay_way=== 0) { }}
+                微信支付
+                {{# } else if(d.pay_way=== 1) { }}
+                支付宝支付
+                {{# } else if(d.pay_way=== 2) { }}
+                银联支付
+                {{# } }}
+            </script>
+
+            <script type="text/html" id="status_tpl">
+                {{# if (d.status=== 1) { }}
+                未支付
+                {{# } else if(d.status=== 2) { }}
+                等待发货
+                {{# } else if(d.status=== 3) { }}
+                等待收货
+                {{# } else if(d.status=== 4) { }}
+                交易完成
+                {{# } }}
+            </script>
+		</div>
+	</body>
+
+    <script src="../static/lib/layui/layui.js" charset="utf-8"></script>
+    <script src="../static/js/jquery.min.js" charset="utf-8"></script>
+    <script>
+        layui.extend({
+        	admin: '{/}../../../static/js/admin'
+        });
+    </script>
+    <script src="../static/js/all_orders.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+            renderTable(0);
+        </script>
+
+</html>

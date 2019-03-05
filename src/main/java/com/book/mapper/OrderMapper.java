@@ -24,9 +24,14 @@ public interface OrderMapper {
 
     int updateByPrimaryKey(Order record);
 
-    List<EveryOrderDto> getOrderByUserId(@Param("userId") Integer userId, @Param("status") Integer status);
+    List<EveryOrderDto> getOrderByUserId(@Param("status") Integer status, @Param("page") Integer page, @Param("limit") Integer limit);
 
     List<OrderBookDto> getOrderBookByOrderId(@Param("order_id") String order_id);
 
     List<Integer> getNotApprBooksByUserID(Integer user_id);
+
+    Integer getOrderCountByStatus(@Param("status") Integer status);
+
+    void updateStatusTo3(@Param("order_id") String order_id);
+
 }
