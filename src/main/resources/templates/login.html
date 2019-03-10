@@ -30,6 +30,10 @@
               var form = layui.form
                 ,admin = layui.admin;
             $(function() {
+                document.onkeydown = function (e) {
+                        if ((e || event).keyCode == 13)
+                            $(".loginin").click();
+                };
                 $(".loginin").click(function() {
                    $.ajax({
                         url: "login/login",
